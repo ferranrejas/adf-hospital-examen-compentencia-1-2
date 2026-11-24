@@ -1,0 +1,90 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nombre de instancia de Data Factory",
+			"defaultValue": "adf-ucb-transporte-us-62722558"
+		},
+		"dw_hospital_sql_password": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"password\"de \"dw_hospital_sql\""
+		},
+		"dw_hospital_sql_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sql-ucb-server-hospital-62722558.database.windows.net"
+		},
+		"dw_hospital_sql_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "dw_hospital"
+		},
+		"dw_hospital_sql_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "FerranVela"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI de la cuenta de almacenamiento que contiene las plantillas de ARM vinculadas."
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Token de SAS para la cuenta de almacenamiento que contiene las plantillas de ARM vinculadas"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adf-ucb-transporte-us-62722558_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"dw_hospital_sql_password": {
+						"value": "[parameters('dw_hospital_sql_password')]"
+					},
+					"dw_hospital_sql_properties_typeProperties_server": {
+						"value": "[parameters('dw_hospital_sql_properties_typeProperties_server')]"
+					},
+					"dw_hospital_sql_properties_typeProperties_database": {
+						"value": "[parameters('dw_hospital_sql_properties_typeProperties_database')]"
+					},
+					"dw_hospital_sql_properties_typeProperties_userName": {
+						"value": "[parameters('dw_hospital_sql_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "adf-ucb-transporte-us-62722558_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-ucb-transporte-us-62722558_ArmTemplate_0')]"
+			]
+		}
+	]
+}
